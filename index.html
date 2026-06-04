@@ -4,303 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>명찰 메이커</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
-    background: #f4f4f0;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    color: #111;
-  }
-
-  h1 {
-    text-align: center;
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: .06em;
-    margin-bottom: 2rem;
-    color: #111;
-  }
-
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    align-items: start;
-  }
-
-  @media (max-width: 620px) {
-    .container { grid-template-columns: 1fr; }
-    .preview-wrap { order: -1; }
-  }
-
-  /* ===== PANEL ===== */
-  .panel {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 14px;
-    padding: 1.4rem;
-  }
-
-  .panel-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    margin-bottom: 1rem;
-  }
-
+  body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; background: #f4f4f0; min-height: 100vh; padding: 2rem 1rem; color: #111; }
+  h1 { text-align: center; font-size: 1.4rem; font-weight: 700; letter-spacing: .06em; margin-bottom: 2rem; color: #111; }
+  .container { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  @media (max-width: 620px) { .container { grid-template-columns: 1fr; } .preview-wrap { order: -1; } }
+  .panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 14px; padding: 1.4rem; }
+  .panel-title { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1rem; }
   .field { margin-bottom: 12px; }
-
-  .field label {
-    display: block;
-    font-size: 11px;
-    color: #666;
-    margin-bottom: 4px;
-    letter-spacing: .04em;
-  }
-
-  .field input[type=text] {
-    width: 100%;
-    font-size: 13px;
-    padding: 7px 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: #fafafa;
-    color: #111;
-    outline: none;
-    transition: border-color .15s;
-  }
-
+  .field label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; letter-spacing: .04em; }
+  .field input[type=text] { width: 100%; font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #ddd; background: #fafafa; color: #111; outline: none; transition: border-color .15s; }
   .field input[type=text]:focus { border-color: #aaa; }
-
   .upload-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
-
-  .upload-btn {
-    font-size: 11px;
-    padding: 5px 11px;
-    border: 1px solid #ddd;
-    border-radius: 7px;
-    cursor: pointer;
-    background: #fafafa;
-    color: #555;
-    white-space: nowrap;
-    transition: background .15s;
-  }
-
+  .upload-btn { font-size: 11px; padding: 5px 11px; border: 1px solid #ddd; border-radius: 7px; cursor: pointer; background: #fafafa; color: #555; white-space: nowrap; transition: background .15s; }
   .upload-btn:hover { background: #f0f0f0; }
   .upload-hint { font-size: 11px; color: #aaa; }
-
   .divider { height: 1px; background: #efefef; margin: 14px 0; }
-
-  /* ===== COLOR CONTROLS ===== */
   .color-block { margin-bottom: 12px; }
-
-  .color-block label {
-    display: block;
-    font-size: 11px;
-    color: #666;
-    margin-bottom: 5px;
-    letter-spacing: .04em;
-  }
-
+  .color-block label { display: block; font-size: 11px; color: #666; margin-bottom: 5px; letter-spacing: .04em; }
   .color-input-row { display: flex; align-items: center; gap: 8px; }
-
-  .color-input-row input[type=color] {
-    width: 32px;
-    height: 32px;
-    padding: 2px;
-    border: 1px solid #ddd;
-    border-radius: 7px;
-    cursor: pointer;
-    background: none;
-  }
-
+  .color-input-row input[type=color] { width: 32px; height: 32px; padding: 2px; border: 1px solid #ddd; border-radius: 7px; cursor: pointer; background: none; }
   .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
-
-  .swatch {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform .15s;
-    flex-shrink: 0;
-  }
-
+  .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .15s; flex-shrink: 0; }
   .swatch:hover { transform: scale(1.15); }
   .swatch.active { border-color: #333; }
   .swatch-white { box-shadow: inset 0 0 0 1px #ccc; }
-
-  /* ===== SAVE BUTTON ===== */
-  .save-btn {
-    width: 100%;
-    padding: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 9px;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-    color: white;
-    letter-spacing: .04em;
-    transition: opacity .15s, transform .1s;
-  }
-
+  .save-btn { width: 100%; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: none; cursor: pointer; margin-top: 10px; color: white; letter-spacing: .04em; transition: opacity .15s, transform .1s; }
   .save-btn:hover { opacity: .88; }
   .save-btn:active { transform: scale(.98); }
   .save-btn:disabled { opacity: .5; cursor: not-allowed; }
-
-  /* ===== PREVIEW ===== */
-  .preview-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    position: sticky;
-    top: 2rem;
-  }
-
-  .preview-label {
-    font-size: 11px;
-    color: #aaa;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-  }
-
-  /* ===== CARD ===== */
-  .card {
-    width: 220px;
-    min-height: 320px;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    background: white;
-    font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
-    border: 2px solid #222;
-  }
-
+  .preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 2rem; }
+  .preview-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .08em; }
+  .card { width: 220px; min-height: 320px; border-radius: 12px; overflow: hidden; position: relative; background: white; font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; border: 2px solid #222; }
   .card-top-bar { height: 10px; background: #111; }
-
-  .card-inner {
-    padding: 14px 14px 18px;
-    position: relative;
-    background: white;
-  }
-
-  .card-org {
-    font-size: 17px;
-    font-weight: 900;
-    line-height: 1.15;
-    letter-spacing: .02em;
-    margin-bottom: 3px;
-    padding-right: 32px;
-  }
-
-  .card-role {
-    font-size: 8px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    margin-bottom: 10px;
-    padding-right: 32px;
-    min-height: 12px;
-  }
-
-  .photo-box {
-    width: calc(100% - 28px);
-    height: 230px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1.5px solid;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,.04);
-  }
-
-  .photo-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-  }
-
-  .photo-placeholder {
-    font-size: 10px;
-    opacity: .35;
-    text-align: center;
-    line-height: 1.7;
-    font-weight: 500;
-    letter-spacing: .04em;
-    color: #333;
-  }
-
-  .card-logo-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    padding-right: 32px;
-    min-height: 0;
-  }
-
-  .logo-img {
-    height: 24px;
-    width: auto;
-    max-width: 70px;
-    object-fit: contain;
-    display: none;
-  }
-
-  .card-name {
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: .04em;
-    margin-bottom: 1px;
-    padding-right: 32px;
-  }
-
-  .card-name-sub {
-    font-size: 8px;
-    font-weight: 600;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding-right: 32px;
-    opacity: .7;
-  }
-
-  .side-bar {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .side-text {
-    writing-mode: vertical-lr;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    color: white;
-    text-orientation: mixed;
-  }
-
-  .note {
-    font-size: 10px;
-    color: #bbb;
-    text-align: center;
-  }
+  .card-inner { padding: 14px 14px 18px; position: relative; background: white; }
+  .card-org { font-size: 17px; font-weight: 900; line-height: 1.15; letter-spacing: .02em; margin-bottom: 3px; padding-right: 32px; }
+  .card-role { font-size: 8px; font-weight: 600; letter-spacing: .08em; margin-bottom: 10px; padding-right: 32px; min-height: 12px; }
+  .photo-box { width: calc(100% - 28px); height: 230px; border-radius: 4px; overflow: hidden; border: 1.5px solid; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.04); }
+  .photo-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .photo-placeholder { font-size: 10px; opacity: .35; text-align: center; line-height: 1.7; font-weight: 500; letter-spacing: .04em; color: #333; }
+  .card-logo-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-right: 32px; min-height: 0; }
+  .logo-img { height: 24px; width: auto; max-width: 70px; object-fit: contain; display: none; }
+  .card-name { font-size: 15px; font-weight: 800; letter-spacing: .04em; margin-bottom: 1px; padding-right: 32px; }
+  .card-name-sub { font-size: 8px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-right: 32px; opacity: .7; }
+  .side-bar { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; display: flex; align-items: center; justify-content: center; }
+  .side-text { writing-mode: vertical-lr; font-size: 9px; font-weight: 700; letter-spacing: .12em; color: white; text-orientation: mixed; }
+  .note { font-size: 10px; color: #bbb; text-align: center; }
 </style>
 </head>
 <body>
@@ -308,8 +59,6 @@
 <h1>✦ 명찰 메이커</h1>
 
 <div class="container">
-
-  <!-- ===== 입력 패널 ===== -->
   <div class="panel">
     <div class="panel-title">정보 입력</div>
 
@@ -355,12 +104,11 @@
 
     <div class="divider"></div>
 
-    <!-- 배경 컬러 -->
     <div class="color-block">
       <label>배경 컬러</label>
       <div class="color-input-row">
         <input type="color" id="bg-picker" value="#ffffff">
-        <div class="swatches" id="bg-swatches">
+        <div class="swatches">
           <div class="swatch bg-sw active swatch-white" data-color="#ffffff" style="background:#ffffff" title="흰색"></div>
           <div class="swatch bg-sw" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
           <div class="swatch bg-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
@@ -372,12 +120,11 @@
       </div>
     </div>
 
-    <!-- 메인 컬러 -->
     <div class="color-block">
       <label>메인 컬러 (등급 · 한글 이름)</label>
       <div class="color-input-row">
         <input type="color" id="main-picker" value="#111111">
-        <div class="swatches" id="main-swatches">
+        <div class="swatches">
           <div class="swatch main-sw active" data-color="#111111" style="background:#111111" title="검정"></div>
           <div class="swatch main-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc" title="흰색"></div>
           <div class="swatch main-sw" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
@@ -389,12 +136,11 @@
       </div>
     </div>
 
-    <!-- 포인트 컬러 -->
     <div class="color-block">
       <label>포인트 컬러 (사이드바 · 테두리)</label>
       <div class="color-input-row">
         <input type="color" id="accent-picker" value="#D32F2F">
-        <div class="swatches" id="accent-swatches">
+        <div class="swatches">
           <div class="swatch acc-sw active" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
           <div class="swatch acc-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
           <div class="swatch acc-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
@@ -405,12 +151,11 @@
       </div>
     </div>
 
-    <!-- 서브 컬러 -->
     <div class="color-block">
       <label>서브 컬러 (소속 · 영문이름)</label>
       <div class="color-input-row">
         <input type="color" id="sub-picker" value="#D32F2F">
-        <div class="swatches" id="sub-swatches">
+        <div class="swatches">
           <div class="swatch sub-sw active" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
           <div class="swatch sub-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
           <div class="swatch sub-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
@@ -426,127 +171,71 @@
     </button>
   </div>
 
-  <!-- ===== 미리보기 ===== -->
   <div class="preview-wrap">
     <span class="preview-label">미리보기</span>
-
     <div class="card" id="card">
       <div class="card-top-bar"></div>
       <div class="card-inner" id="card-inner">
-
         <div class="card-org" id="card-org" style="color:#D32F2F">Sentinel / Guide</div>
         <div class="card-role" id="card-role" style="color:#111111">B Class</div>
-
         <div class="photo-box" id="photo-box" style="border-color:#D32F2F">
           <img id="char-img" alt="캐릭터">
           <div class="photo-placeholder" id="photo-placeholder">캐릭터<br>이미지<br>업로드</div>
         </div>
-
         <div class="card-logo-row" id="card-logo-row">
           <img class="logo-img" id="logo-img" alt="로고">
         </div>
-
         <div class="card-name" id="card-name" style="color:#111111">홍길동</div>
         <div class="card-name-sub" id="card-name-sub" style="color:#D32F2F">HONG GILDONG</div>
-
         <div class="side-bar" id="side-bar" style="background:#D32F2F">
-          <div class="side-text" id="side-text">Vanguard</div>
+          <div class="side-text" id="side-text"></div>
         </div>
-
       </div>
     </div>
-
     <p class="note">저장 크기: 440 × 620px</p>
   </div>
-
 </div>
 
 <script>
-  let bgColor     = '#ffffff';
-  let mainColor   = '#111111';
-  let accentColor = '#D32F2F';
-  let subColor    = '#D32F2F';
+  let bgColor = '#ffffff', mainColor = '#111111', accentColor = '#D32F2F', subColor = '#D32F2F';
 
-  /* ===== 색상 적용 ===== */
-  function applyBg(c) {
-    bgColor = c;
-    document.getElementById('card').style.background = c;
-    document.getElementById('card-inner').style.background = c;
-    document.getElementById('bg-picker').value = c;
-  }
-  function applyMain(c) {
-    mainColor = c;
-    document.getElementById('card-name').style.color = c;
-    document.getElementById('card-role').style.color = c;
-    document.getElementById('main-picker').value = c;
-  }
-  function applyAccent(c) {
-    accentColor = c;
-    document.getElementById('photo-box').style.borderColor = c;
-    document.getElementById('side-bar').style.background = c;
-    document.getElementById('save-btn').style.background = c;
-    document.getElementById('accent-picker').value = c;
-  }
-  function applySub(c) {
-    subColor = c;
-    document.getElementById('card-org').style.color = c;
-    document.getElementById('card-name-sub').style.color = c;
-    document.getElementById('sub-picker').value = c;
-  }
+  function applyBg(c) { bgColor=c; document.getElementById('card').style.background=c; document.getElementById('card-inner').style.background=c; document.getElementById('bg-picker').value=c; }
+  function applyMain(c) { mainColor=c; document.getElementById('card-name').style.color=c; document.getElementById('card-role').style.color=c; document.getElementById('main-picker').value=c; }
+  function applyAccent(c) { accentColor=c; document.getElementById('photo-box').style.borderColor=c; document.getElementById('side-bar').style.background=c; document.getElementById('save-btn').style.background=c; document.getElementById('accent-picker').value=c; }
+  function applySub(c) { subColor=c; document.getElementById('card-org').style.color=c; document.getElementById('card-name-sub').style.color=c; document.getElementById('sub-picker').value=c; }
 
-  /* ===== 텍스트 업데이트 ===== */
   function update() {
     const v = id => document.getElementById(id).value.trim();
-
     document.getElementById('card-org').textContent      = v('inp-org')     || 'Sentinel / Guide';
     document.getElementById('card-role').textContent     = v('inp-role')    || 'B Class';
     document.getElementById('card-name').textContent     = v('inp-name')    || '홍길동';
     document.getElementById('card-name-sub').textContent = v('inp-name-en') || 'HONG GILDONG';
-
-    // 사이드 텍스트: 공란이면 빈 문자열
-    const sideVal = v('inp-side');
-    document.getElementById('side-text').textContent = sideVal;
+    document.getElementById('side-text').textContent     = v('inp-side');
   }
 
   ['inp-org','inp-role','inp-name','inp-name-en','inp-side'].forEach(id => {
     document.getElementById(id).addEventListener('input', update);
   });
 
-  /* ===== 스와치 ===== */
-  function bindSwatches(groupClass, applyFn) {
-    document.querySelectorAll('.' + groupClass).forEach(sw => {
+  function bindSwatches(cls, fn) {
+    document.querySelectorAll('.' + cls).forEach(sw => {
       sw.addEventListener('click', () => {
-        document.querySelectorAll('.' + groupClass).forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.' + cls).forEach(s => s.classList.remove('active'));
         sw.classList.add('active');
-        applyFn(sw.dataset.color);
+        fn(sw.dataset.color);
       });
     });
   }
-
-  bindSwatches('bg-sw',   applyBg);
+  bindSwatches('bg-sw', applyBg);
   bindSwatches('main-sw', applyMain);
-  bindSwatches('acc-sw',  applyAccent);
-  bindSwatches('sub-sw',  applySub);
+  bindSwatches('acc-sw', applyAccent);
+  bindSwatches('sub-sw', applySub);
 
-  /* ===== 컬러피커 ===== */
-  document.getElementById('bg-picker').addEventListener('input', function() {
-    document.querySelectorAll('.bg-sw').forEach(s => s.classList.remove('active'));
-    applyBg(this.value);
-  });
-  document.getElementById('main-picker').addEventListener('input', function() {
-    document.querySelectorAll('.main-sw').forEach(s => s.classList.remove('active'));
-    applyMain(this.value);
-  });
-  document.getElementById('accent-picker').addEventListener('input', function() {
-    document.querySelectorAll('.acc-sw').forEach(s => s.classList.remove('active'));
-    applyAccent(this.value);
-  });
-  document.getElementById('sub-picker').addEventListener('input', function() {
-    document.querySelectorAll('.sub-sw').forEach(s => s.classList.remove('active'));
-    applySub(this.value);
-  });
+  document.getElementById('bg-picker').addEventListener('input', function() { document.querySelectorAll('.bg-sw').forEach(s=>s.classList.remove('active')); applyBg(this.value); });
+  document.getElementById('main-picker').addEventListener('input', function() { document.querySelectorAll('.main-sw').forEach(s=>s.classList.remove('active')); applyMain(this.value); });
+  document.getElementById('accent-picker').addEventListener('input', function() { document.querySelectorAll('.acc-sw').forEach(s=>s.classList.remove('active')); applyAccent(this.value); });
+  document.getElementById('sub-picker').addEventListener('input', function() { document.querySelectorAll('.sub-sw').forEach(s=>s.classList.remove('active')); applySub(this.value); });
 
-  /* ===== 이미지 업로드 ===== */
   function handleUpload(inputId, imgId, hintId, onLoad) {
     document.getElementById(inputId).addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -558,7 +247,7 @@
         img.style.display = 'block';
         if (onLoad) onLoad();
         const name = file.name;
-        document.getElementById(hintId).textContent = name.length > 16 ? name.slice(0,14) + '…' : name;
+        document.getElementById(hintId).textContent = name.length > 16 ? name.slice(0,14)+'…' : name;
       };
       r.readAsDataURL(file);
     });
@@ -567,46 +256,29 @@
   handleUpload('char-file', 'char-img', 'char-hint', () => {
     document.getElementById('photo-placeholder').style.display = 'none';
   });
+  handleUpload('logo-file', 'logo-img', 'logo-hint', null);
 
-  handleUpload('logo-file', 'logo-img', 'logo-hint', () => {
-    // 로고 업로드 시 표시, 아니면 숨김 유지
-  });
-
-  /* ===== PNG 저장 (dom-to-image) ===== */
   document.getElementById('save-btn').addEventListener('click', function() {
     const btn = this;
     const card = document.getElementById('card');
-
     btn.disabled = true;
     btn.textContent = '저장 중...';
 
-    const scale = 2;
-    const width  = 440;
-    const height = card.offsetHeight * (440 / 220);
-
-    domtoimage.toPng(card, {
-      width:  width,
-      height: height,
-      style: {
-        transform: 'scale(' + scale + ')',
-        transformOrigin: 'top left',
-        width:  (width  / scale) + 'px',
-        height: (height / scale) + 'px',
-      },
-      bgcolor: bgColor,
-      useCORS: true
-    })
-    .then(function(dataUrl) {
+    html2canvas(card, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: bgColor,
+      logging: false
+    }).then(function(canvas) {
       const a = document.createElement('a');
       a.download = 'namecard.png';
-      a.href = dataUrl;
+      a.href = canvas.toDataURL('image/png');
       a.click();
-    })
-    .catch(function(err) {
+    }).catch(function(err) {
       console.error(err);
       alert('저장 중 오류가 발생했어요. 다시 시도해주세요.');
-    })
-    .finally(function() {
+    }).finally(function() {
       btn.disabled = false;
       btn.textContent = '↓ PNG로 저장하기';
     });
