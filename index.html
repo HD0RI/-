@@ -4,37 +4,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>명찰 메이커</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;700&family=Gaegu:wght@700&family=Jua&family=Black+Han+Sans&family=Cute+Font&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; background: #f4f4f0; min-height: 100vh; padding: 2rem 1rem; color: #111; }
-  h1 { text-align: center; font-size: 1.4rem; font-weight: 700; letter-spacing: .06em; margin-bottom: 2rem; color: #111; }
-  .container { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
-  @media (max-width: 620px) { .container { grid-template-columns: 1fr; } .preview-wrap { order: -1; } }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f4f4f0; min-height: 100vh; color: #111; }
+
+  h1 { text-align: center; font-size: 1.3rem; font-weight: 700; letter-spacing: .06em; color: #111; padding: 1.5rem 1rem 1rem; }
+
+  /* ===== 데스크탑 레이아웃 ===== */
+  .desktop-wrap { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 0 1rem 2rem; align-items: start; }
+
   .panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 14px; padding: 1.4rem; }
   .panel-title { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1rem; }
-  .field { margin-bottom: 12px; }
-  .field label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; letter-spacing: .04em; }
-  .field input[type=text] { width: 100%; font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #ddd; background: #fafafa; color: #111; outline: none; transition: border-color .15s; }
-  .field input[type=text]:focus { border-color: #aaa; }
-  .upload-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
-  .upload-btn { font-size: 11px; padding: 5px 11px; border: 1px solid #ddd; border-radius: 7px; cursor: pointer; background: #fafafa; color: #555; white-space: nowrap; transition: background .15s; }
-  .upload-btn:hover { background: #f0f0f0; }
-  .upload-hint { font-size: 11px; color: #aaa; }
   .divider { height: 1px; background: #efefef; margin: 14px 0; }
-  .color-block { margin-bottom: 12px; }
-  .color-block label { display: block; font-size: 11px; color: #666; margin-bottom: 5px; letter-spacing: .04em; }
-  .color-input-row { display: flex; align-items: center; gap: 8px; }
-  .color-input-row input[type=color] { width: 32px; height: 32px; padding: 2px; border: 1px solid #ddd; border-radius: 7px; cursor: pointer; background: none; }
-  .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
-  .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .15s; flex-shrink: 0; }
+  .field-group { margin-bottom: 14px; }
+  .field-group label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; letter-spacing: .04em; }
+  .field-group input[type=text] { width: 100%; font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #ddd; background: #fafafa; color: #111; outline: none; transition: border-color .15s; }
+  .field-group input[type=text]:focus { border-color: #aaa; }
+  .color-row { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+  .color-row input[type=color] { width: 26px; height: 26px; padding: 1px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; background: none; flex-shrink: 0; }
+  .swatches { display: flex; gap: 5px; flex-wrap: wrap; }
+  .swatch { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .15s; flex-shrink: 0; }
   .swatch:hover { transform: scale(1.15); }
   .swatch.active { border-color: #333; }
-  .save-btn { width: 100%; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: none; cursor: pointer; margin-top: 10px; color: white; letter-spacing: .04em; transition: opacity .15s, transform .1s; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }
+  .field input[type=text] { width: 100%; font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #ddd; background: #fafafa; color: #111; outline: none; }
+  .upload-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+  .upload-btn { font-size: 11px; padding: 5px 11px; border: 1px solid #ddd; border-radius: 7px; cursor: pointer; background: #fafafa; color: #555; white-space: nowrap; }
+  .upload-btn:hover { background: #f0f0f0; }
+  .upload-hint { font-size: 11px; color: #aaa; }
+  .font-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+  .font-btn { font-size: 11px; padding: 3px 9px; border-radius: 99px; border: 1px solid #ddd; background: #fafafa; color: #555; cursor: pointer; white-space: nowrap; transition: background .15s; }
+  .font-btn:hover { background: #f0f0f0; }
+  .font-btn.active { background: #111; border-color: #111; color: white; }
+  .border-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 6px; }
+  .border-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 6px 4px; border-radius: 8px; border: 1px solid #eee; transition: background .15s; }
+  .border-opt:hover { background: #f5f5f5; }
+  .border-opt.active { background: #f0f0f0; border-color: #bbb; }
+  .border-opt-preview { width: 28px; height: 38px; border-radius: 5px; background: #e8e8e8; }
+  .border-opt-label { font-size: 9px; color: #666; text-align: center; }
+  .save-btn { width: 100%; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: none; cursor: pointer; margin-top: 4px; color: white; transition: opacity .15s, transform .1s; }
   .save-btn:hover { opacity: .88; }
   .save-btn:active { transform: scale(.98); }
   .save-btn:disabled { opacity: .5; cursor: not-allowed; }
+  #status-msg { font-size: 11px; color: #aaa; text-align: center; margin-top: 6px; min-height: 16px; }
+
+  /* 데스크탑 미리보기 */
   .preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 2rem; }
   .preview-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .08em; }
+  .note { font-size: 10px; color: #bbb; text-align: center; }
+
+  /* 카드 */
+  .card-outer { padding: 0; border-radius: 14px; background: transparent; }
   .card { width: 220px; border-radius: 12px; overflow: hidden; position: relative; background: white; border: 2px solid #222; }
   .card-top-bar { height: 10px; background: #111; }
   .card-inner { padding: 14px 14px 18px; position: relative; background: white; }
@@ -47,23 +69,196 @@
   .logo-img { height: 24px; width: auto; max-width: 70px; object-fit: contain; display: none; }
   .card-name { font-size: 15px; font-weight: 800; letter-spacing: .04em; margin-bottom: 1px; padding-right: 32px; }
   .card-name-sub { font-size: 8px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-right: 32px; opacity: .7; }
-  .side-bar { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; display: flex; align-items: center; justify-content: center; }
+  .side-bar { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
   .side-text { writing-mode: vertical-lr; font-size: 9px; font-weight: 700; letter-spacing: .12em; color: white; text-orientation: mixed; }
-  .note { font-size: 10px; color: #bbb; text-align: center; }
-  #status-msg { font-size: 11px; color: #aaa; text-align: center; margin-top: 6px; min-height: 16px; }
+  .side-id { writing-mode: vertical-lr; font-size: 7px; font-weight: 500; color: rgba(255,255,255,.6); letter-spacing: .08em; text-orientation: mixed; }
+
+  /* ===== 모바일 레이아웃 ===== */
+  .mobile-preview-bar { display: none; }
+
+  @media (max-width: 620px) {
+    h1 { font-size: 1.1rem; padding: 1rem 1rem 0.5rem; }
+
+    /* 상단 고정 미리보기 바 */
+    .mobile-preview-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(244,244,240,.96);
+      backdrop-filter: blur(8px);
+      padding: 10px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .mobile-card-wrap { transform: scale(0.48); transform-origin: center center; flex-shrink: 0; margin: -52px -10px; }
+    .mobile-save-area { display: flex; flex-direction: column; align-items: stretch; gap: 6px; flex: 1; min-width: 0; }
+    .mobile-save-btn { padding: 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: none; cursor: pointer; color: white; width: 100%; }
+    .mobile-save-btn:disabled { opacity: .5; }
+    .mobile-status { font-size: 10px; color: #aaa; text-align: center; min-height: 14px; }
+
+    /* 데스크탑 미리보기 숨기기 */
+    .desktop-wrap { grid-template-columns: 1fr; padding: 0 0.75rem 2rem; gap: 16px; }
+    .preview-wrap { display: none; }
+
+    /* 패널 여백 조정 */
+    .panel { padding: 1rem; border-radius: 12px; }
+    .field-group input[type=text], .field input[type=text] { font-size: 16px; /* iOS 줌 방지 */ }
+  }
 </style>
 </head>
 <body>
+
+<!-- 모바일 상단 고정 미리보기 -->
+<div class="mobile-preview-bar" id="mobile-preview-bar">
+  <div class="mobile-card-wrap">
+    <div class="card-outer" id="card-outer-mobile">
+      <div class="card" id="card-mobile">
+        <div class="card-top-bar"></div>
+        <div class="card-inner" id="card-inner-mobile">
+          <div class="card-org" id="card-org-mobile" style="color:#D32F2F;font-family:'Noto Sans KR',sans-serif">Sentinel / Guide</div>
+          <div class="card-role" id="card-role-mobile" style="color:#111;font-family:'Noto Sans KR',sans-serif">B Class</div>
+          <div class="photo-box" id="photo-box-mobile" style="border-color:#D32F2F">
+            <img id="char-img-mobile" alt="">
+            <div class="photo-placeholder" id="photo-placeholder-mobile">캐릭터<br>이미지<br>업로드</div>
+          </div>
+          <div class="card-logo-row"><img class="logo-img" id="logo-img-mobile" alt=""></div>
+          <div class="card-name" id="card-name-mobile" style="color:#111;font-family:'Noto Sans KR',sans-serif">홍길동</div>
+          <div class="card-name-sub" id="card-name-sub-mobile" style="color:#D32F2F;font-family:'Noto Sans KR',sans-serif">HONG GILDONG</div>
+          <div class="side-bar" id="side-bar-mobile" style="background:#D32F2F">
+            <div class="side-text" id="side-text-mobile"></div>
+            <div class="side-id" id="side-id-mobile"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-save-area">
+    <button class="mobile-save-btn" id="mobile-save-btn" style="background:#D32F2F">↓ PNG 저장</button>
+    <div class="mobile-status" id="mobile-status-msg"></div>
+  </div>
+</div>
+
 <h1>✦ 명찰 메이커</h1>
-<div class="container">
+
+<div class="desktop-wrap">
   <div class="panel">
     <div class="panel-title">정보 입력</div>
-    <div class="field"><label>소속 (상단 큰 글씨)</label><input type="text" id="inp-org" placeholder="Sentinel / Guide" maxlength="30"></div>
-    <div class="field"><label>등급 (작은 글씨)</label><input type="text" id="inp-role" placeholder="B Class" maxlength="30"></div>
-    <div class="field"><label>이름</label><input type="text" id="inp-name" placeholder="홍길동" maxlength="20"></div>
-    <div class="field"><label>이름 (영문)</label><input type="text" id="inp-name-en" placeholder="HONG GILDONG" maxlength="30"></div>
-    <div class="field"><label>사이드 텍스트 (우측 세로, 공란 가능)</label><input type="text" id="inp-side" placeholder="비워두면 표시 안 됨" maxlength="10"></div>
+
+    <div class="field-group">
+      <label>소속 (상단 큰 글씨)</label>
+      <input type="text" id="inp-org" placeholder="Sentinel / Guide" maxlength="30">
+      <div class="color-row">
+        <input type="color" id="sub-picker" value="#D32F2F">
+        <div class="swatches">
+          <div class="swatch sub-sw active" data-color="#D32F2F" style="background:#D32F2F"></div>
+          <div class="swatch sub-sw" data-color="#1565C0" style="background:#1565C0"></div>
+          <div class="swatch sub-sw" data-color="#2E7D32" style="background:#2E7D32"></div>
+          <div class="swatch sub-sw" data-color="#F9A825" style="background:#F9A825"></div>
+          <div class="swatch sub-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
+          <div class="swatch sub-sw" data-color="#212121" style="background:#212121"></div>
+          <div class="swatch sub-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
+        </div>
+      </div>
+      <div class="font-row" data-target="card-org">
+        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
+        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
+        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
+        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
+        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
+        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>등급 (작은 글씨)</label>
+      <input type="text" id="inp-role" placeholder="B Class" maxlength="30">
+      <div class="color-row">
+        <input type="color" id="main-picker" value="#111111">
+        <div class="swatches">
+          <div class="swatch main-sw active" data-color="#111111" style="background:#111111"></div>
+          <div class="swatch main-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
+          <div class="swatch main-sw" data-color="#D32F2F" style="background:#D32F2F"></div>
+          <div class="swatch main-sw" data-color="#1565C0" style="background:#1565C0"></div>
+          <div class="swatch main-sw" data-color="#2E7D32" style="background:#2E7D32"></div>
+          <div class="swatch main-sw" data-color="#F9A825" style="background:#F9A825"></div>
+          <div class="swatch main-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
+        </div>
+      </div>
+      <div class="font-row" data-target="card-role">
+        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
+        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
+        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
+        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
+        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
+        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>이름</label>
+      <input type="text" id="inp-name" placeholder="홍길동" maxlength="20">
+      <div class="color-row">
+        <input type="color" id="name-picker" value="#111111">
+        <div class="swatches">
+          <div class="swatch name-sw active" data-color="#111111" style="background:#111111"></div>
+          <div class="swatch name-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
+          <div class="swatch name-sw" data-color="#D32F2F" style="background:#D32F2F"></div>
+          <div class="swatch name-sw" data-color="#1565C0" style="background:#1565C0"></div>
+          <div class="swatch name-sw" data-color="#2E7D32" style="background:#2E7D32"></div>
+          <div class="swatch name-sw" data-color="#F9A825" style="background:#F9A825"></div>
+          <div class="swatch name-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
+        </div>
+      </div>
+      <div class="font-row" data-target="card-name">
+        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
+        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
+        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
+        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
+        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
+        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>이름 (영문)</label>
+      <input type="text" id="inp-name-en" placeholder="HONG GILDONG" maxlength="30">
+      <div class="color-row">
+        <input type="color" id="name-en-picker" value="#D32F2F">
+        <div class="swatches">
+          <div class="swatch name-en-sw active" data-color="#D32F2F" style="background:#D32F2F"></div>
+          <div class="swatch name-en-sw" data-color="#1565C0" style="background:#1565C0"></div>
+          <div class="swatch name-en-sw" data-color="#2E7D32" style="background:#2E7D32"></div>
+          <div class="swatch name-en-sw" data-color="#F9A825" style="background:#F9A825"></div>
+          <div class="swatch name-en-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
+          <div class="swatch name-en-sw" data-color="#212121" style="background:#212121"></div>
+          <div class="swatch name-en-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
+        </div>
+      </div>
+      <div class="font-row" data-target="card-name-sub">
+        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
+        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
+        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
+        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
+        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
+        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>사이드 텍스트 (우측 세로, 공란 가능)</label>
+      <input type="text" id="inp-side" placeholder="비워두면 표시 안 됨" maxlength="10">
+    </div>
+    <div class="field">
+      <label>일련번호 (사이드바 하단, 공란 가능)</label>
+      <input type="text" id="inp-id" placeholder="No.0042 / ID-7731" maxlength="12">
+    </div>
+
     <div class="divider"></div>
+
     <div class="field">
       <label>캐릭터 이미지</label>
       <div class="upload-row">
@@ -80,85 +275,77 @@
         <span class="upload-hint" id="logo-hint">없으면 공란으로 저장됩니다</span>
       </div>
     </div>
+
     <div class="divider"></div>
-    <div class="color-block">
+
+    <div class="field-group">
       <label>배경 컬러</label>
-      <div class="color-input-row">
+      <div class="color-row">
         <input type="color" id="bg-picker" value="#ffffff">
         <div class="swatches">
-          <div class="swatch bg-sw active" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc" title="흰색"></div>
-          <div class="swatch bg-sw" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
-          <div class="swatch bg-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
-          <div class="swatch bg-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
-          <div class="swatch bg-sw" data-color="#F9A825" style="background:#F9A825" title="노랑"></div>
-          <div class="swatch bg-sw" data-color="#E91E8C" style="background:#E91E8C" title="분홍"></div>
-          <div class="swatch bg-sw" data-color="#212121" style="background:#212121" title="검정"></div>
+          <div class="swatch bg-sw active" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
+          <div class="swatch bg-sw" data-color="#D32F2F" style="background:#D32F2F"></div>
+          <div class="swatch bg-sw" data-color="#1565C0" style="background:#1565C0"></div>
+          <div class="swatch bg-sw" data-color="#2E7D32" style="background:#2E7D32"></div>
+          <div class="swatch bg-sw" data-color="#F9A825" style="background:#F9A825"></div>
+          <div class="swatch bg-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
+          <div class="swatch bg-sw" data-color="#212121" style="background:#212121"></div>
         </div>
       </div>
     </div>
-    <div class="color-block">
-      <label>메인 컬러 (등급 · 한글 이름)</label>
-      <div class="color-input-row">
-        <input type="color" id="main-picker" value="#111111">
-        <div class="swatches">
-          <div class="swatch main-sw active" data-color="#111111" style="background:#111111" title="검정"></div>
-          <div class="swatch main-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc" title="흰색"></div>
-          <div class="swatch main-sw" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
-          <div class="swatch main-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
-          <div class="swatch main-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
-          <div class="swatch main-sw" data-color="#F9A825" style="background:#F9A825" title="노랑"></div>
-          <div class="swatch main-sw" data-color="#E91E8C" style="background:#E91E8C" title="분홍"></div>
-        </div>
-      </div>
-    </div>
-    <div class="color-block">
+    <div class="field-group">
       <label>포인트 컬러 (사이드바 · 테두리)</label>
-      <div class="color-input-row">
+      <div class="color-row">
         <input type="color" id="accent-picker" value="#D32F2F">
         <div class="swatches">
-          <div class="swatch acc-sw active" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
-          <div class="swatch acc-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
-          <div class="swatch acc-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
-          <div class="swatch acc-sw" data-color="#F9A825" style="background:#F9A825" title="노랑"></div>
-          <div class="swatch acc-sw" data-color="#E91E8C" style="background:#E91E8C" title="분홍"></div>
-          <div class="swatch acc-sw" data-color="#212121" style="background:#212121" title="검정"></div>
+          <div class="swatch acc-sw active" data-color="#D32F2F" style="background:#D32F2F"></div>
+          <div class="swatch acc-sw" data-color="#1565C0" style="background:#1565C0"></div>
+          <div class="swatch acc-sw" data-color="#2E7D32" style="background:#2E7D32"></div>
+          <div class="swatch acc-sw" data-color="#F9A825" style="background:#F9A825"></div>
+          <div class="swatch acc-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
+          <div class="swatch acc-sw" data-color="#212121" style="background:#212121"></div>
+          <div class="swatch acc-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
         </div>
       </div>
     </div>
-    <div class="color-block">
-      <label>서브 컬러 (소속 · 영문이름)</label>
-      <div class="color-input-row">
-        <input type="color" id="sub-picker" value="#D32F2F">
-        <div class="swatches">
-          <div class="swatch sub-sw active" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
-          <div class="swatch sub-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
-          <div class="swatch sub-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
-          <div class="swatch sub-sw" data-color="#F9A825" style="background:#F9A825" title="노랑"></div>
-          <div class="swatch sub-sw" data-color="#E91E8C" style="background:#E91E8C" title="분홍"></div>
-          <div class="swatch sub-sw" data-color="#212121" style="background:#212121" title="검정"></div>
-        </div>
+
+    <div class="divider"></div>
+
+    <div class="field-group">
+      <label>테두리 스타일</label>
+      <div class="border-options" id="border-options">
+        <div class="border-opt active" data-style="default"><div class="border-opt-preview" style="border:2px solid #555"></div><div class="border-opt-label">기본</div></div>
+        <div class="border-opt" data-style="double"><div class="border-opt-preview" style="border:2px solid #D32F2F;outline:3px solid rgba(211,47,47,.25);outline-offset:2px"></div><div class="border-opt-label">이중선</div></div>
+        <div class="border-opt" data-style="dashed"><div class="border-opt-preview" style="border:2px dashed #D32F2F"></div><div class="border-opt-label">점선</div></div>
+        <div class="border-opt" data-style="glow"><div class="border-opt-preview" style="border:2px solid #D32F2F;box-shadow:0 0 0 3px rgba(211,47,47,.2)"></div><div class="border-opt-label">글로우</div></div>
+        <div class="border-opt" data-style="gradient"><div class="border-opt-preview" style="padding:2px;background:linear-gradient(135deg,#00e5ff,#7c4dff,#ff4081);border-radius:6px"><div style="width:100%;height:100%;background:#e8e8e8;border-radius:4px"></div></div><div class="border-opt-label">그라데이션</div></div>
       </div>
     </div>
+
     <button class="save-btn" id="save-btn" style="background:#D32F2F">↓ PNG로 저장하기</button>
     <div id="status-msg"></div>
   </div>
 
+  <!-- 데스크탑 미리보기 -->
   <div class="preview-wrap">
     <span class="preview-label">미리보기</span>
-    <div class="card" id="card">
-      <div class="card-top-bar"></div>
-      <div class="card-inner" id="card-inner">
-        <div class="card-org" id="card-org" style="color:#D32F2F">Sentinel / Guide</div>
-        <div class="card-role" id="card-role" style="color:#111111">B Class</div>
-        <div class="photo-box" id="photo-box" style="border-color:#D32F2F">
-          <img id="char-img" alt="">
-          <div class="photo-placeholder" id="photo-placeholder">캐릭터<br>이미지<br>업로드</div>
-        </div>
-        <div class="card-logo-row"><img class="logo-img" id="logo-img" alt=""></div>
-        <div class="card-name" id="card-name" style="color:#111111">홍길동</div>
-        <div class="card-name-sub" id="card-name-sub" style="color:#D32F2F">HONG GILDONG</div>
-        <div class="side-bar" id="side-bar" style="background:#D32F2F">
-          <div class="side-text" id="side-text"></div>
+    <div class="card-outer" id="card-outer">
+      <div class="card" id="card">
+        <div class="card-top-bar"></div>
+        <div class="card-inner" id="card-inner">
+          <div class="card-org" id="card-org" style="color:#D32F2F;font-family:'Noto Sans KR',sans-serif">Sentinel / Guide</div>
+          <div class="card-role" id="card-role" style="color:#111;font-family:'Noto Sans KR',sans-serif">B Class</div>
+          <div class="photo-box" id="photo-box" style="border-color:#D32F2F">
+            <img id="char-img" alt="">
+            <div class="photo-placeholder" id="photo-placeholder">캐릭터<br>이미지<br>업로드</div>
+          </div>
+          <div class="card-logo-row"><img class="logo-img" id="logo-img" alt=""></div>
+          <div class="card-name" id="card-name" style="color:#111;font-family:'Noto Sans KR',sans-serif">홍길동</div>
+          <div class="card-name-sub" id="card-name-sub" style="color:#D32F2F;font-family:'Noto Sans KR',sans-serif">HONG GILDONG</div>
+          <div class="side-bar" id="side-bar" style="background:#D32F2F">
+            <div class="side-text" id="side-text"></div>
+            <div class="side-id" id="side-id"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -167,23 +354,63 @@
 </div>
 
 <script>
-  /* ===== 색상 상태 ===== */
-  var bgColor='#ffffff', mainColor='#111111', accentColor='#D32F2F', subColor='#D32F2F';
+  var bgColor='#ffffff', accentColor='#D32F2F', borderStyle='default';
 
-  function applyBg(c){ bgColor=c; document.getElementById('card').style.background=c; document.getElementById('card-inner').style.background=c; document.getElementById('bg-picker').value=c; }
-  function applyMain(c){ mainColor=c; document.getElementById('card-name').style.color=c; document.getElementById('card-role').style.color=c; document.getElementById('main-picker').value=c; }
-  function applyAccent(c){ accentColor=c; document.getElementById('photo-box').style.borderColor=c; document.getElementById('side-bar').style.background=c; document.getElementById('save-btn').style.background=c; document.getElementById('accent-picker').value=c; }
-  function applySub(c){ subColor=c; document.getElementById('card-org').style.color=c; document.getElementById('card-name-sub').style.color=c; document.getElementById('sub-picker').value=c; }
+  // 데스크탑/모바일 카드 쌍으로 업데이트
+  var pairs = [
+    ['card-org','card-org-mobile'], ['card-role','card-role-mobile'],
+    ['card-name','card-name-mobile'], ['card-name-sub','card-name-sub-mobile'],
+    ['side-text','side-text-mobile'], ['side-id','side-id-mobile']
+  ];
+
+  function syncProp(prop, val){
+    pairs.forEach(function(p){ document.getElementById(p[0]).style[prop]=val; document.getElementById(p[1]).style[prop]=val; });
+  }
+  function syncEl(id, prop, val){ document.getElementById(id).style[prop]=val; document.getElementById(id+'-mobile').style[prop]=val; }
+  function syncText(id, val){ document.getElementById(id).textContent=val; document.getElementById(id+'-mobile').textContent=val; }
+
+  function applyBg(c){
+    bgColor=c;
+    ['card','card-mobile'].forEach(function(id){ document.getElementById(id).style.background=c; });
+    ['card-inner','card-inner-mobile'].forEach(function(id){ document.getElementById(id).style.background=c; });
+    document.getElementById('bg-picker').value=c;
+  }
+  function applyAccent(c){
+    accentColor=c;
+    ['photo-box','photo-box-mobile'].forEach(function(id){ document.getElementById(id).style.borderColor=c; });
+    ['side-bar','side-bar-mobile'].forEach(function(id){ document.getElementById(id).style.background=c; });
+    document.getElementById('save-btn').style.background=c;
+    document.getElementById('mobile-save-btn').style.background=c;
+    document.getElementById('accent-picker').value=c;
+    applyBorderStyle(borderStyle);
+  }
+
+  function applyBorderStyle(style){
+    borderStyle=style;
+    var ids=[['card','card-outer'],['card-mobile','card-outer-mobile']];
+    ids.forEach(function(pair){
+      var card=document.getElementById(pair[0]), outer=document.getElementById(pair[1]);
+      card.style.border=''; card.style.boxShadow=''; card.style.outline=''; card.style.outlineOffset=''; card.style.borderRadius='12px';
+      outer.style.padding='0'; outer.style.background='transparent';
+      if(style==='default'){ card.style.border='2px solid #222'; }
+      else if(style==='double'){ card.style.border='2px solid '+accentColor; card.style.outline='4px solid '+hexRgba(accentColor,.25); card.style.outlineOffset='2px'; }
+      else if(style==='dashed'){ card.style.border='2px dashed '+accentColor; }
+      else if(style==='glow'){ card.style.border='2px solid '+accentColor; card.style.boxShadow='0 0 0 4px '+hexRgba(accentColor,.2)+', 0 0 16px '+hexRgba(accentColor,.15); }
+      else if(style==='gradient'){ card.style.border='none'; card.style.borderRadius='10px'; outer.style.padding='2px'; outer.style.background='linear-gradient(135deg,#00e5ff,#7c4dff,#ff4081)'; }
+    });
+  }
+  function hexRgba(hex,a){ var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return 'rgba('+r+','+g+','+b+','+a+')'; }
 
   function update(){
     var v=function(id){ return document.getElementById(id).value.trim(); };
-    document.getElementById('card-org').textContent      = v('inp-org')||'Sentinel / Guide';
-    document.getElementById('card-role').textContent     = v('inp-role')||'B Class';
-    document.getElementById('card-name').textContent     = v('inp-name')||'홍길동';
-    document.getElementById('card-name-sub').textContent = v('inp-name-en')||'HONG GILDONG';
-    document.getElementById('side-text').textContent     = v('inp-side');
+    syncText('card-org', v('inp-org')||'Sentinel / Guide');
+    syncText('card-role', v('inp-role')||'B Class');
+    syncText('card-name', v('inp-name')||'홍길동');
+    syncText('card-name-sub', v('inp-name-en')||'HONG GILDONG');
+    syncText('side-text', v('inp-side'));
+    syncText('side-id', v('inp-id'));
   }
-  ['inp-org','inp-role','inp-name','inp-name-en','inp-side'].forEach(function(id){ document.getElementById(id).addEventListener('input', update); });
+  ['inp-org','inp-role','inp-name','inp-name-en','inp-side','inp-id'].forEach(function(id){ document.getElementById(id).addEventListener('input', update); });
 
   function bindSwatches(cls, fn){
     document.querySelectorAll('.'+cls).forEach(function(sw){
@@ -194,89 +421,85 @@
     });
   }
   bindSwatches('bg-sw', applyBg);
-  bindSwatches('main-sw', applyMain);
   bindSwatches('acc-sw', applyAccent);
-  bindSwatches('sub-sw', applySub);
-  document.getElementById('bg-picker').addEventListener('input', function(){ document.querySelectorAll('.bg-sw').forEach(function(s){s.classList.remove('active');}); applyBg(this.value); });
-  document.getElementById('main-picker').addEventListener('input', function(){ document.querySelectorAll('.main-sw').forEach(function(s){s.classList.remove('active');}); applyMain(this.value); });
-  document.getElementById('accent-picker').addEventListener('input', function(){ document.querySelectorAll('.acc-sw').forEach(function(s){s.classList.remove('active');}); applyAccent(this.value); });
-  document.getElementById('sub-picker').addEventListener('input', function(){ document.querySelectorAll('.sub-sw').forEach(function(s){s.classList.remove('active');}); applySub(this.value); });
+  bindSwatches('sub-sw', function(c){ syncEl('card-org','color',c); document.getElementById('sub-picker').value=c; });
+  bindSwatches('main-sw', function(c){ syncEl('card-role','color',c); document.getElementById('main-picker').value=c; });
+  bindSwatches('name-sw', function(c){ syncEl('card-name','color',c); document.getElementById('name-picker').value=c; });
+  bindSwatches('name-en-sw', function(c){ syncEl('card-name-sub','color',c); document.getElementById('name-en-picker').value=c; });
 
-  /* ===== 이미지 업로드 ===== */
+  document.getElementById('bg-picker').addEventListener('input', function(){ document.querySelectorAll('.bg-sw').forEach(function(s){s.classList.remove('active');}); applyBg(this.value); });
+  document.getElementById('accent-picker').addEventListener('input', function(){ document.querySelectorAll('.acc-sw').forEach(function(s){s.classList.remove('active');}); applyAccent(this.value); });
+  document.getElementById('sub-picker').addEventListener('input', function(){ document.querySelectorAll('.sub-sw').forEach(function(s){s.classList.remove('active');}); syncEl('card-org','color',this.value); });
+  document.getElementById('main-picker').addEventListener('input', function(){ document.querySelectorAll('.main-sw').forEach(function(s){s.classList.remove('active');}); syncEl('card-role','color',this.value); });
+  document.getElementById('name-picker').addEventListener('input', function(){ document.querySelectorAll('.name-sw').forEach(function(s){s.classList.remove('active');}); syncEl('card-name','color',this.value); });
+  document.getElementById('name-en-picker').addEventListener('input', function(){ document.querySelectorAll('.name-en-sw').forEach(function(s){s.classList.remove('active');}); syncEl('card-name-sub','color',this.value); });
+
+  document.querySelectorAll('.font-row').forEach(function(row){
+    var targetId=row.dataset.target;
+    row.querySelectorAll('.font-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        row.querySelectorAll('.font-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById(targetId).style.fontFamily=btn.dataset.font;
+        document.getElementById(targetId+'-mobile').style.fontFamily=btn.dataset.font;
+      });
+    });
+  });
+
+  document.getElementById('border-options').addEventListener('click', function(e){
+    var opt=e.target.closest('.border-opt'); if(!opt) return;
+    document.querySelectorAll('.border-opt').forEach(function(o){ o.classList.remove('active'); });
+    opt.classList.add('active'); applyBorderStyle(opt.dataset.style);
+  });
+
   function handleUpload(inputId, imgId, hintId, placeholderId){
     document.getElementById(inputId).addEventListener('change', function(e){
-      var file = e.target.files[0]; if(!file) return;
-      var r = new FileReader();
-      r.onload = function(ev){
-        var img = document.getElementById(imgId);
-        img.src = ev.target.result; img.style.display='block';
-        if(placeholderId) document.getElementById(placeholderId).style.display='none';
-        var name = file.name;
-        document.getElementById(hintId).textContent = name.length>16 ? name.slice(0,14)+'…' : name;
+      var file=e.target.files[0]; if(!file) return;
+      var r=new FileReader();
+      r.onload=function(ev){
+        [imgId, imgId+'-mobile'].forEach(function(id){
+          var img=document.getElementById(id); if(!img) return;
+          img.src=ev.target.result; img.style.display='block';
+        });
+        if(placeholderId){
+          [placeholderId, placeholderId+'-mobile'].forEach(function(id){
+            var el=document.getElementById(id); if(el) el.style.display='none';
+          });
+        }
+        var name=file.name; document.getElementById(hintId).textContent=name.length>16?name.slice(0,14)+'…':name;
       };
       r.readAsDataURL(file);
     });
   }
   handleUpload('char-file','char-img','char-hint','photo-placeholder');
-  handleUpload('logo-file','logo-img','logo-hint', null);
+  handleUpload('logo-file','logo-img','logo-hint',null);
 
-  /* ===== 저장: 미리보기 카드를 그대로 캡처 ===== */
-  function setStatus(msg){ document.getElementById('status-msg').textContent = msg; }
-
-  function doSave(){
-    var btn = document.getElementById('save-btn');
-    var card = document.getElementById('card');
-    btn.disabled = true;
-    btn.textContent = '저장 중...';
-    setStatus('');
-
-    html2canvas(card, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: bgColor,
-      logging: false,
-      imageTimeout: 15000
-    }).then(function(canvas){
-      var a = document.createElement('a');
-      a.download = 'namecard.png';
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-      setStatus('저장 완료!');
-    }).catch(function(err){
-      console.error(err);
-      setStatus('오류가 발생했어요. 다시 시도해주세요.');
-    }).finally(function(){
-      btn.disabled = false;
-      btn.textContent = '↓ PNG로 저장하기';
-    });
+  function setStatus(msg, isMobile){
+    document.getElementById(isMobile?'mobile-status-msg':'status-msg').textContent=msg;
   }
 
-  /* ===== html2canvas 다중 CDN 로드 ===== */
-  function loadScript(src, cb){
-    var s = document.createElement('script');
-    s.src = src;
-    s.onload = function(){ cb(null); };
-    s.onerror = function(){ cb(new Error('failed: '+src)); };
-    document.head.appendChild(s);
+  function doSave(isMobile){
+    var btnId = isMobile ? 'mobile-save-btn' : 'save-btn';
+    var btn = document.getElementById(btnId);
+    var cardId = isMobile ? (borderStyle==='gradient'?'card-outer-mobile':'card-mobile') : (borderStyle==='gradient'?'card-outer':'card');
+    var target = document.getElementById(cardId);
+    btn.disabled=true; btn.textContent='저장 중...'; setStatus('', isMobile);
+    html2canvas(target,{ scale:2, useCORS:true, allowTaint:true, backgroundColor:borderStyle==='gradient'?null:bgColor, logging:false, imageTimeout:15000 })
+    .then(function(canvas){ var a=document.createElement('a'); a.download='namecard.png'; a.href=canvas.toDataURL('image/png'); a.click(); setStatus('저장 완료!', isMobile); })
+    .catch(function(err){ console.error(err); setStatus('오류가 발생했어요.', isMobile); })
+    .finally(function(){ btn.disabled=false; btn.textContent=isMobile?'↓ PNG 저장':'↓ PNG로 저장하기'; });
   }
 
-  var cdns = [
-    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-    'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
-    'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
-  ];
-
+  var cdns=['https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js','https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js','https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'];
   function tryLoad(i){
-    if(i >= cdns.length){
-      setStatus('라이브러리 로드 실패. 인터넷 연결을 확인해주세요.');
-      document.getElementById('save-btn').disabled = true;
-      return;
-    }
-    loadScript(cdns[i], function(err){
-      if(err){ tryLoad(i+1); }
-      else { document.getElementById('save-btn').addEventListener('click', doSave); }
-    });
+    if(i>=cdns.length){ document.getElementById('save-btn').disabled=true; document.getElementById('mobile-save-btn').disabled=true; return; }
+    var s=document.createElement('script'); s.src=cdns[i];
+    s.onload=function(){
+      document.getElementById('save-btn').addEventListener('click', function(){ doSave(false); });
+      document.getElementById('mobile-save-btn').addEventListener('click', function(){ doSave(true); });
+    };
+    s.onerror=function(){ tryLoad(i+1); };
+    document.head.appendChild(s);
   }
   tryLoad(0);
 </script>
