@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>명찰 메이커</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;700&family=Gaegu:wght@700&family=Jua&family=Black+Han+Sans&family=Cute+Font&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; background: #f4f4f0; min-height: 100vh; color: #111; }
+  body { font-family:'Noto Sans KR',sans-serif'Noto Sans KR', sans-serif; background: #f4f4f0; min-height: 100vh; color: #111; }
 
   h1 { text-align: center; font-size: 1.3rem; font-weight: 700; letter-spacing: .06em; color: #111; padding: 1.5rem 1rem 1rem; }
 
@@ -34,10 +34,8 @@
   .upload-btn { font-size: 11px; padding: 5px 11px; border: 1px solid #ddd; border-radius: 7px; cursor: pointer; background: #fafafa; color: #555; white-space: nowrap; }
   .upload-btn:hover { background: #f0f0f0; }
   .upload-hint { font-size: 11px; color: #aaa; }
-  .font-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
-  .font-btn { font-size: 11px; padding: 3px 9px; border-radius: 99px; border: 1px solid #ddd; background: #fafafa; color: #555; cursor: pointer; white-space: nowrap; transition: background .15s; }
-  .font-btn:hover { background: #f0f0f0; }
-  .font-btn.active { background: #111; border-color: #111; color: white; }
+
+
   .border-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 6px; }
   .border-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 6px 4px; border-radius: 8px; border: 1px solid #eee; transition: background .15s; }
   .border-opt:hover { background: #f5f5f5; }
@@ -163,15 +161,7 @@
           <div class="swatch sub-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
         </div>
       </div>
-      <div class="font-row" data-target="card-org">
-        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
-        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
-        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
-        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
-        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
-        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
-      </div>
-    </div>
+</div>
 
     <div class="field-group">
       <label>등급 (작은 글씨)</label>
@@ -188,15 +178,7 @@
           <div class="swatch main-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
         </div>
       </div>
-      <div class="font-row" data-target="card-role">
-        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
-        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
-        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
-        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
-        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
-        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
-      </div>
-    </div>
+</div>
 
     <div class="field-group">
       <label>이름</label>
@@ -213,15 +195,7 @@
           <div class="swatch name-sw" data-color="#E91E8C" style="background:#E91E8C"></div>
         </div>
       </div>
-      <div class="font-row" data-target="card-name">
-        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
-        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
-        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
-        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
-        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
-        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
-      </div>
-    </div>
+</div>
 
     <div class="field-group">
       <label>이름 (영문)</label>
@@ -238,15 +212,7 @@
           <div class="swatch name-en-sw" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc"></div>
         </div>
       </div>
-      <div class="font-row" data-target="card-name-sub">
-        <button class="font-btn active" data-font="'Noto Sans KR',sans-serif">고딕</button>
-        <button class="font-btn" data-font="'Black Han Sans',sans-serif">블랙고딕</button>
-        <button class="font-btn" data-font="'Jua',sans-serif">주아체</button>
-        <button class="font-btn" data-font="'Noto Serif KR',serif">명조</button>
-        <button class="font-btn" data-font="'Gaegu',cursive">손글씨</button>
-        <button class="font-btn" data-font="'Cute Font',cursive">귀여운체</button>
-      </div>
-    </div>
+</div>
 
     <div class="field">
       <label>사이드 텍스트 (우측 세로, 공란 가능)</label>
@@ -434,12 +400,7 @@
   document.getElementById('name-picker').addEventListener('input', function(){ document.querySelectorAll('.name-sw').forEach(function(s){s.classList.remove('active');}); syncEl('card-name','color',this.value); });
   document.getElementById('name-en-picker').addEventListener('input', function(){ document.querySelectorAll('.name-en-sw').forEach(function(s){s.classList.remove('active');}); syncEl('card-name-sub','color',this.value); });
 
-  document.querySelectorAll('.font-row').forEach(function(row){
-    var targetId=row.dataset.target;
-    row.querySelectorAll('.font-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        row.querySelectorAll('.font-btn').forEach(function(b){ b.classList.remove('active'); });
-        btn.classList.add('active');
+  btn.classList.add('active');
         document.getElementById(targetId).style.fontFamily=btn.dataset.font;
         document.getElementById(targetId+'-mobile').style.fontFamily=btn.dataset.font;
       });
@@ -493,7 +454,7 @@
         logging:false, imageTimeout:15000,
         onclone:function(doc){
           var s=doc.createElement('style');
-          s.textContent='@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;700&family=Gaegu:wght@700&family=Jua&family=Black+Han+Sans&family=Cute+Font&display=swap");';
+          s.textContent='@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap");';
           doc.head.appendChild(s);
         }
       });
