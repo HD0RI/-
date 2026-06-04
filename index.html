@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>명찰 메이커</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -155,6 +155,7 @@
 
   .save-btn:hover { opacity: .88; }
   .save-btn:active { transform: scale(.98); }
+  .save-btn:disabled { opacity: .5; cursor: not-allowed; }
 
   /* ===== PREVIEW ===== */
   .preview-wrap {
@@ -208,11 +209,12 @@
     letter-spacing: .08em;
     margin-bottom: 10px;
     padding-right: 32px;
+    min-height: 12px;
   }
 
   .photo-box {
     width: calc(100% - 28px);
-    aspect-ratio: 3/4;
+    height: 230px;
     border-radius: 4px;
     overflow: hidden;
     border: 1.5px solid;
@@ -246,6 +248,7 @@
     gap: 6px;
     margin-bottom: 8px;
     padding-right: 32px;
+    min-height: 0;
   }
 
   .logo-img {
@@ -254,16 +257,6 @@
     max-width: 70px;
     object-fit: contain;
     display: none;
-  }
-
-  .logo-placeholder {
-    font-size: 9px;
-    letter-spacing: .08em;
-    font-weight: 700;
-    padding: 3px 7px;
-    border: 1px dashed currentColor;
-    border-radius: 3px;
-    opacity: .3;
   }
 
   .card-name {
@@ -325,7 +318,7 @@
       <input type="text" id="inp-org" placeholder="Sentinel / Guide" maxlength="30">
     </div>
     <div class="field">
-      <label>직책 (작은 글씨)</label>
+      <label>등급 (작은 글씨)</label>
       <input type="text" id="inp-role" placeholder="B Class" maxlength="30">
     </div>
     <div class="field">
@@ -337,8 +330,8 @@
       <input type="text" id="inp-name-en" placeholder="HONG GILDONG" maxlength="30">
     </div>
     <div class="field">
-      <label>사이드 텍스트 (우측 세로)</label>
-      <input type="text" id="inp-side" placeholder="Vanguard" maxlength="10">
+      <label>사이드 텍스트 (우측 세로, 공란 가능)</label>
+      <input type="text" id="inp-side" placeholder="비워두면 표시 안 됨" maxlength="10">
     </div>
 
     <div class="divider"></div>
@@ -352,11 +345,11 @@
       </div>
     </div>
     <div class="field">
-      <label>로고 이미지</label>
+      <label>로고 이미지 (선택)</label>
       <div class="upload-row">
         <label class="upload-btn" for="logo-file">↑ 선택</label>
         <input type="file" id="logo-file" accept="image/*" style="display:none">
-        <span class="upload-hint" id="logo-hint">하단에 표시됩니다</span>
+        <span class="upload-hint" id="logo-hint">없으면 공란으로 저장됩니다</span>
       </div>
     </div>
 
@@ -381,7 +374,7 @@
 
     <!-- 메인 컬러 -->
     <div class="color-block">
-      <label>메인 컬러 (직책 · 한글 이름)</label>
+      <label>메인 컬러 (등급 · 한글 이름)</label>
       <div class="color-input-row">
         <input type="color" id="main-picker" value="#111111">
         <div class="swatches" id="main-swatches">
@@ -449,9 +442,8 @@
           <div class="photo-placeholder" id="photo-placeholder">캐릭터<br>이미지<br>업로드</div>
         </div>
 
-        <div class="card-logo-row">
+        <div class="card-logo-row" id="card-logo-row">
           <img class="logo-img" id="logo-img" alt="로고">
-          <span class="logo-placeholder" id="logo-placeholder" style="color:#D32F2F">로고</span>
         </div>
 
         <div class="card-name" id="card-name" style="color:#111111">홍길동</div>
@@ -470,13 +462,12 @@
 </div>
 
 <script>
-  // 현재 색상 상태
-  let bgColor    = '#ffffff';
-  let mainColor  = '#111111';
-  let accentColor= '#D32F2F';
-  let subColor   = '#D32F2F';
+  let bgColor     = '#ffffff';
+  let mainColor   = '#111111';
+  let accentColor = '#D32F2F';
+  let subColor    = '#D32F2F';
 
-  // --- 색상 적용 함수 ---
+  /* ===== 색상 적용 ===== */
   function applyBg(c) {
     bgColor = c;
     document.getElementById('card').style.background = c;
@@ -500,25 +491,28 @@
     subColor = c;
     document.getElementById('card-org').style.color = c;
     document.getElementById('card-name-sub').style.color = c;
-    document.getElementById('logo-placeholder').style.color = c;
     document.getElementById('sub-picker').value = c;
   }
 
-  // --- 텍스트 업데이트 ---
+  /* ===== 텍스트 업데이트 ===== */
   function update() {
     const v = id => document.getElementById(id).value.trim();
+
     document.getElementById('card-org').textContent      = v('inp-org')     || 'Sentinel / Guide';
     document.getElementById('card-role').textContent     = v('inp-role')    || 'B Class';
     document.getElementById('card-name').textContent     = v('inp-name')    || '홍길동';
     document.getElementById('card-name-sub').textContent = v('inp-name-en') || 'HONG GILDONG';
-    document.getElementById('side-text').textContent     = v('inp-side')    || 'Vanguard';
+
+    // 사이드 텍스트: 공란이면 빈 문자열
+    const sideVal = v('inp-side');
+    document.getElementById('side-text').textContent = sideVal;
   }
 
   ['inp-org','inp-role','inp-name','inp-name-en','inp-side'].forEach(id => {
     document.getElementById(id).addEventListener('input', update);
   });
 
-  // --- 스와치 클릭 ---
+  /* ===== 스와치 ===== */
   function bindSwatches(groupClass, applyFn) {
     document.querySelectorAll('.' + groupClass).forEach(sw => {
       sw.addEventListener('click', () => {
@@ -534,7 +528,7 @@
   bindSwatches('acc-sw',  applyAccent);
   bindSwatches('sub-sw',  applySub);
 
-  // --- 컬러피커 ---
+  /* ===== 컬러피커 ===== */
   document.getElementById('bg-picker').addEventListener('input', function() {
     document.querySelectorAll('.bg-sw').forEach(s => s.classList.remove('active'));
     applyBg(this.value);
@@ -552,7 +546,7 @@
     applySub(this.value);
   });
 
-  // --- 이미지 업로드 ---
+  /* ===== 이미지 업로드 ===== */
   function handleUpload(inputId, imgId, hintId, onLoad) {
     document.getElementById(inputId).addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -573,21 +567,48 @@
   handleUpload('char-file', 'char-img', 'char-hint', () => {
     document.getElementById('photo-placeholder').style.display = 'none';
   });
+
   handleUpload('logo-file', 'logo-img', 'logo-hint', () => {
-    document.getElementById('logo-placeholder').style.display = 'none';
+    // 로고 업로드 시 표시, 아니면 숨김 유지
   });
 
-  // --- PNG 저장 ---
+  /* ===== PNG 저장 (dom-to-image) ===== */
   document.getElementById('save-btn').addEventListener('click', function() {
+    const btn = this;
     const card = document.getElementById('card');
-    const origW = card.style.width;
-    card.style.width = '440px';
-    html2canvas(card, { scale: 2, useCORS: true, backgroundColor: bgColor }).then(canvas => {
-      card.style.width = origW;
+
+    btn.disabled = true;
+    btn.textContent = '저장 중...';
+
+    const scale = 2;
+    const width  = 440;
+    const height = card.offsetHeight * (440 / 220);
+
+    domtoimage.toPng(card, {
+      width:  width,
+      height: height,
+      style: {
+        transform: 'scale(' + scale + ')',
+        transformOrigin: 'top left',
+        width:  (width  / scale) + 'px',
+        height: (height / scale) + 'px',
+      },
+      bgcolor: bgColor,
+      useCORS: true
+    })
+    .then(function(dataUrl) {
       const a = document.createElement('a');
       a.download = 'namecard.png';
-      a.href = canvas.toDataURL('image/png');
+      a.href = dataUrl;
       a.click();
+    })
+    .catch(function(err) {
+      console.error(err);
+      alert('저장 중 오류가 발생했어요. 다시 시도해주세요.');
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = '↓ PNG로 저장하기';
     });
   });
 </script>
