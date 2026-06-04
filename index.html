@@ -483,11 +483,27 @@
     var btn = document.getElementById(btnId);
     var cardId = isMobile ? (borderStyle==='gradient'?'card-outer-mobile':'card-mobile') : (borderStyle==='gradient'?'card-outer':'card');
     var target = document.getElementById(cardId);
-    btn.disabled=true; btn.textContent='저장 중...'; setStatus('', isMobile);
-    html2canvas(target,{ scale:2, useCORS:true, allowTaint:true, backgroundColor:borderStyle==='gradient'?null:bgColor, logging:false, imageTimeout:15000 })
-    .then(function(canvas){ var a=document.createElement('a'); a.download='namecard.png'; a.href=canvas.toDataURL('image/png'); a.click(); setStatus('저장 완료!', isMobile); })
-    .catch(function(err){ console.error(err); setStatus('오류가 발생했어요.', isMobile); })
-    .finally(function(){ btn.disabled=false; btn.textContent=isMobile?'↓ PNG 저장':'↓ PNG로 저장하기'; });
+    btn.disabled=true; btn.textContent='폰트 로딩 중...'; setStatus('', isMobile);
+    var fontReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    fontReady.then(function(){
+      btn.textContent='저장 중...';
+      return html2canvas(target,{
+        scale:2, useCORS:true, allowTaint:true,
+        backgroundColor:borderStyle==='gradient'?null:bgColor,
+        logging:false, imageTimeout:15000,
+        onclone:function(doc){
+          var s=doc.createElement('style');
+          s.textContent='@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;700&family=Gaegu:wght@700&family=Jua&family=Black+Han+Sans&family=Cute+Font&display=swap");';
+          doc.head.appendChild(s);
+        }
+      });
+    })
+    .then(function(canvas){
+      var a=document.createElement('a'); a.download='namecard.png'; a.href=canvas.toDataURL('image/png'); a.click();
+      setStatus('저장 완료!', isMobile);
+      btn.disabled=false; btn.textContent=isMobile?'↓ PNG 저장':'↓ PNG로 저장하기';
+    })
+    .catch(function(err){ console.error(err); setStatus('오류가 발생했어요.', isMobile); btn.disabled=false; btn.textContent=isMobile?'↓ PNG 저장':'↓ PNG로 저장하기'; });
   }
 
   var cdns=['https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js','https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js','https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'];
