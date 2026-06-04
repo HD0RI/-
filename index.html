@@ -29,60 +29,41 @@
   .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .15s; flex-shrink: 0; }
   .swatch:hover { transform: scale(1.15); }
   .swatch.active { border-color: #333; }
-  .swatch-white { box-shadow: inset 0 0 0 1px #ccc; }
   .save-btn { width: 100%; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 9px; border: none; cursor: pointer; margin-top: 10px; color: white; letter-spacing: .04em; transition: opacity .15s, transform .1s; }
   .save-btn:hover { opacity: .88; }
   .save-btn:active { transform: scale(.98); }
   .save-btn:disabled { opacity: .5; cursor: not-allowed; }
   .preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 2rem; }
   .preview-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .08em; }
-  .card { width: 220px; min-height: 320px; border-radius: 12px; overflow: hidden; position: relative; background: white; font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; border: 2px solid #222; }
+  .card { width: 220px; border-radius: 12px; overflow: hidden; position: relative; background: white; border: 2px solid #222; }
   .card-top-bar { height: 10px; background: #111; }
   .card-inner { padding: 14px 14px 18px; position: relative; background: white; }
   .card-org { font-size: 17px; font-weight: 900; line-height: 1.15; letter-spacing: .02em; margin-bottom: 3px; padding-right: 32px; }
   .card-role { font-size: 8px; font-weight: 600; letter-spacing: .08em; margin-bottom: 10px; padding-right: 32px; min-height: 12px; }
   .photo-box { width: calc(100% - 28px); height: 230px; border-radius: 4px; overflow: hidden; border: 1.5px solid; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.04); }
   .photo-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
-  .photo-placeholder { font-size: 10px; opacity: .35; text-align: center; line-height: 1.7; font-weight: 500; letter-spacing: .04em; color: #333; }
-  .card-logo-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-right: 32px; min-height: 0; }
+  .photo-placeholder { font-size: 10px; opacity: .35; text-align: center; line-height: 1.7; font-weight: 500; color: #333; }
+  .card-logo-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding-right: 32px; }
   .logo-img { height: 24px; width: auto; max-width: 70px; object-fit: contain; display: none; }
   .card-name { font-size: 15px; font-weight: 800; letter-spacing: .04em; margin-bottom: 1px; padding-right: 32px; }
   .card-name-sub { font-size: 8px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding-right: 32px; opacity: .7; }
   .side-bar { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; display: flex; align-items: center; justify-content: center; }
   .side-text { writing-mode: vertical-lr; font-size: 9px; font-weight: 700; letter-spacing: .12em; color: white; text-orientation: mixed; }
   .note { font-size: 10px; color: #bbb; text-align: center; }
+  #status-msg { font-size: 11px; color: #aaa; text-align: center; margin-top: 6px; min-height: 16px; }
 </style>
 </head>
 <body>
-
 <h1>✦ 명찰 메이커</h1>
-
 <div class="container">
   <div class="panel">
     <div class="panel-title">정보 입력</div>
-    <div class="field">
-      <label>소속 (상단 큰 글씨)</label>
-      <input type="text" id="inp-org" placeholder="Sentinel / Guide" maxlength="30">
-    </div>
-    <div class="field">
-      <label>등급 (작은 글씨)</label>
-      <input type="text" id="inp-role" placeholder="B Class" maxlength="30">
-    </div>
-    <div class="field">
-      <label>이름</label>
-      <input type="text" id="inp-name" placeholder="홍길동" maxlength="20">
-    </div>
-    <div class="field">
-      <label>이름 (영문)</label>
-      <input type="text" id="inp-name-en" placeholder="HONG GILDONG" maxlength="30">
-    </div>
-    <div class="field">
-      <label>사이드 텍스트 (우측 세로, 공란 가능)</label>
-      <input type="text" id="inp-side" placeholder="비워두면 표시 안 됨" maxlength="10">
-    </div>
-
+    <div class="field"><label>소속 (상단 큰 글씨)</label><input type="text" id="inp-org" placeholder="Sentinel / Guide" maxlength="30"></div>
+    <div class="field"><label>등급 (작은 글씨)</label><input type="text" id="inp-role" placeholder="B Class" maxlength="30"></div>
+    <div class="field"><label>이름</label><input type="text" id="inp-name" placeholder="홍길동" maxlength="20"></div>
+    <div class="field"><label>이름 (영문)</label><input type="text" id="inp-name-en" placeholder="HONG GILDONG" maxlength="30"></div>
+    <div class="field"><label>사이드 텍스트 (우측 세로, 공란 가능)</label><input type="text" id="inp-side" placeholder="비워두면 표시 안 됨" maxlength="10"></div>
     <div class="divider"></div>
-
     <div class="field">
       <label>캐릭터 이미지</label>
       <div class="upload-row">
@@ -99,15 +80,13 @@
         <span class="upload-hint" id="logo-hint">없으면 공란으로 저장됩니다</span>
       </div>
     </div>
-
     <div class="divider"></div>
-
     <div class="color-block">
       <label>배경 컬러</label>
       <div class="color-input-row">
         <input type="color" id="bg-picker" value="#ffffff">
         <div class="swatches">
-          <div class="swatch bg-sw active swatch-white" data-color="#ffffff" style="background:#ffffff" title="흰색"></div>
+          <div class="swatch bg-sw active" data-color="#ffffff" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ccc" title="흰색"></div>
           <div class="swatch bg-sw" data-color="#D32F2F" style="background:#D32F2F" title="빨강"></div>
           <div class="swatch bg-sw" data-color="#1565C0" style="background:#1565C0" title="파랑"></div>
           <div class="swatch bg-sw" data-color="#2E7D32" style="background:#2E7D32" title="초록"></div>
@@ -160,10 +139,8 @@
         </div>
       </div>
     </div>
-
-    <button class="save-btn" id="save-btn" style="background:#D32F2F">
-      ↓ PNG로 저장하기
-    </button>
+    <button class="save-btn" id="save-btn" style="background:#D32F2F">↓ PNG로 저장하기</button>
+    <div id="status-msg"></div>
   </div>
 
   <div class="preview-wrap">
@@ -177,9 +154,7 @@
           <img id="char-img" alt="">
           <div class="photo-placeholder" id="photo-placeholder">캐릭터<br>이미지<br>업로드</div>
         </div>
-        <div class="card-logo-row" id="card-logo-row">
-          <img class="logo-img" id="logo-img" alt="">
-        </div>
+        <div class="card-logo-row"><img class="logo-img" id="logo-img" alt=""></div>
         <div class="card-name" id="card-name" style="color:#111111">홍길동</div>
         <div class="card-name-sub" id="card-name-sub" style="color:#D32F2F">HONG GILDONG</div>
         <div class="side-bar" id="side-bar" style="background:#D32F2F">
@@ -192,215 +167,118 @@
 </div>
 
 <script>
-  let bgColor='#ffffff', mainColor='#111111', accentColor='#D32F2F', subColor='#D32F2F';
-  let charDataUrl = null, logoDataUrl = null;
+  /* ===== 색상 상태 ===== */
+  var bgColor='#ffffff', mainColor='#111111', accentColor='#D32F2F', subColor='#D32F2F';
 
-  function applyBg(c) { bgColor=c; document.getElementById('card').style.background=c; document.getElementById('card-inner').style.background=c; document.getElementById('bg-picker').value=c; }
-  function applyMain(c) { mainColor=c; document.getElementById('card-name').style.color=c; document.getElementById('card-role').style.color=c; document.getElementById('main-picker').value=c; }
-  function applyAccent(c) { accentColor=c; document.getElementById('photo-box').style.borderColor=c; document.getElementById('side-bar').style.background=c; document.getElementById('save-btn').style.background=c; document.getElementById('accent-picker').value=c; }
-  function applySub(c) { subColor=c; document.getElementById('card-org').style.color=c; document.getElementById('card-name-sub').style.color=c; document.getElementById('sub-picker').value=c; }
+  function applyBg(c){ bgColor=c; document.getElementById('card').style.background=c; document.getElementById('card-inner').style.background=c; document.getElementById('bg-picker').value=c; }
+  function applyMain(c){ mainColor=c; document.getElementById('card-name').style.color=c; document.getElementById('card-role').style.color=c; document.getElementById('main-picker').value=c; }
+  function applyAccent(c){ accentColor=c; document.getElementById('photo-box').style.borderColor=c; document.getElementById('side-bar').style.background=c; document.getElementById('save-btn').style.background=c; document.getElementById('accent-picker').value=c; }
+  function applySub(c){ subColor=c; document.getElementById('card-org').style.color=c; document.getElementById('card-name-sub').style.color=c; document.getElementById('sub-picker').value=c; }
 
-  function update() {
-    const v = id => document.getElementById(id).value.trim();
-    document.getElementById('card-org').textContent      = v('inp-org')     || 'Sentinel / Guide';
-    document.getElementById('card-role').textContent     = v('inp-role')    || 'B Class';
-    document.getElementById('card-name').textContent     = v('inp-name')    || '홍길동';
-    document.getElementById('card-name-sub').textContent = v('inp-name-en') || 'HONG GILDONG';
+  function update(){
+    var v=function(id){ return document.getElementById(id).value.trim(); };
+    document.getElementById('card-org').textContent      = v('inp-org')||'Sentinel / Guide';
+    document.getElementById('card-role').textContent     = v('inp-role')||'B Class';
+    document.getElementById('card-name').textContent     = v('inp-name')||'홍길동';
+    document.getElementById('card-name-sub').textContent = v('inp-name-en')||'HONG GILDONG';
     document.getElementById('side-text').textContent     = v('inp-side');
   }
-  ['inp-org','inp-role','inp-name','inp-name-en','inp-side'].forEach(id => document.getElementById(id).addEventListener('input', update));
+  ['inp-org','inp-role','inp-name','inp-name-en','inp-side'].forEach(function(id){ document.getElementById(id).addEventListener('input', update); });
 
-  function bindSwatches(cls, fn) {
-    document.querySelectorAll('.'+cls).forEach(sw => sw.addEventListener('click', () => {
-      document.querySelectorAll('.'+cls).forEach(s => s.classList.remove('active'));
-      sw.classList.add('active'); fn(sw.dataset.color);
-    }));
+  function bindSwatches(cls, fn){
+    document.querySelectorAll('.'+cls).forEach(function(sw){
+      sw.addEventListener('click', function(){
+        document.querySelectorAll('.'+cls).forEach(function(s){ s.classList.remove('active'); });
+        sw.classList.add('active'); fn(sw.dataset.color);
+      });
+    });
   }
   bindSwatches('bg-sw', applyBg);
   bindSwatches('main-sw', applyMain);
   bindSwatches('acc-sw', applyAccent);
   bindSwatches('sub-sw', applySub);
-  document.getElementById('bg-picker').addEventListener('input', function(){ document.querySelectorAll('.bg-sw').forEach(s=>s.classList.remove('active')); applyBg(this.value); });
-  document.getElementById('main-picker').addEventListener('input', function(){ document.querySelectorAll('.main-sw').forEach(s=>s.classList.remove('active')); applyMain(this.value); });
-  document.getElementById('accent-picker').addEventListener('input', function(){ document.querySelectorAll('.acc-sw').forEach(s=>s.classList.remove('active')); applyAccent(this.value); });
-  document.getElementById('sub-picker').addEventListener('input', function(){ document.querySelectorAll('.sub-sw').forEach(s=>s.classList.remove('active')); applySub(this.value); });
+  document.getElementById('bg-picker').addEventListener('input', function(){ document.querySelectorAll('.bg-sw').forEach(function(s){s.classList.remove('active');}); applyBg(this.value); });
+  document.getElementById('main-picker').addEventListener('input', function(){ document.querySelectorAll('.main-sw').forEach(function(s){s.classList.remove('active');}); applyMain(this.value); });
+  document.getElementById('accent-picker').addEventListener('input', function(){ document.querySelectorAll('.acc-sw').forEach(function(s){s.classList.remove('active');}); applyAccent(this.value); });
+  document.getElementById('sub-picker').addEventListener('input', function(){ document.querySelectorAll('.sub-sw').forEach(function(s){s.classList.remove('active');}); applySub(this.value); });
 
-  function handleUpload(inputId, onLoad) {
-    document.getElementById(inputId).addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const r = new FileReader();
-      r.onload = ev => { if (onLoad) onLoad(ev.target.result, file.name); };
+  /* ===== 이미지 업로드 ===== */
+  function handleUpload(inputId, imgId, hintId, placeholderId){
+    document.getElementById(inputId).addEventListener('change', function(e){
+      var file = e.target.files[0]; if(!file) return;
+      var r = new FileReader();
+      r.onload = function(ev){
+        var img = document.getElementById(imgId);
+        img.src = ev.target.result; img.style.display='block';
+        if(placeholderId) document.getElementById(placeholderId).style.display='none';
+        var name = file.name;
+        document.getElementById(hintId).textContent = name.length>16 ? name.slice(0,14)+'…' : name;
+      };
       r.readAsDataURL(file);
     });
   }
+  handleUpload('char-file','char-img','char-hint','photo-placeholder');
+  handleUpload('logo-file','logo-img','logo-hint', null);
 
-  handleUpload('char-file', (dataUrl, name) => {
-    charDataUrl = dataUrl;
-    const img = document.getElementById('char-img');
-    img.src = dataUrl; img.style.display = 'block';
-    document.getElementById('photo-placeholder').style.display = 'none';
-    document.getElementById('char-hint').textContent = name.length>16 ? name.slice(0,14)+'…' : name;
-  });
-  handleUpload('logo-file', (dataUrl, name) => {
-    logoDataUrl = dataUrl;
-    const img = document.getElementById('logo-img');
-    img.src = dataUrl; img.style.display = 'block';
-    document.getElementById('logo-hint').textContent = name.length>16 ? name.slice(0,14)+'…' : name;
-  });
+  /* ===== 저장: 미리보기 카드를 그대로 캡처 ===== */
+  function setStatus(msg){ document.getElementById('status-msg').textContent = msg; }
 
-  /* ===== Canvas 직접 그리기로 저장 ===== */
-  document.getElementById('save-btn').addEventListener('click', function() {
-    const btn = this;
+  function doSave(){
+    var btn = document.getElementById('save-btn');
+    var card = document.getElementById('card');
     btn.disabled = true;
     btn.textContent = '저장 중...';
+    setStatus('');
 
-    const SCALE = 2;
-    const W = 440, BORDER = 2, TOP_BAR = 20, PAD = 28;
-    const card = document.getElementById('card');
-    const H = card.offsetHeight * SCALE;
+    html2canvas(card, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: bgColor,
+      logging: false,
+      imageTimeout: 15000
+    }).then(function(canvas){
+      var a = document.createElement('a');
+      a.download = 'namecard.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      setStatus('저장 완료!');
+    }).catch(function(err){
+      console.error(err);
+      setStatus('오류가 발생했어요. 다시 시도해주세요.');
+    }).finally(function(){
+      btn.disabled = false;
+      btn.textContent = '↓ PNG로 저장하기';
+    });
+  }
 
-    const canvas = document.createElement('canvas');
-    canvas.width  = W;
-    canvas.height = H;
-    const ctx = canvas.getContext('2d');
+  /* ===== html2canvas 다중 CDN 로드 ===== */
+  function loadScript(src, cb){
+    var s = document.createElement('script');
+    s.src = src;
+    s.onload = function(){ cb(null); };
+    s.onerror = function(){ cb(new Error('failed: '+src)); };
+    document.head.appendChild(s);
+  }
 
-    // 카드 배경 + 테두리
-    ctx.fillStyle = '#222';
-    roundRect(ctx, 0, 0, W, H, 24);
-    ctx.fill();
+  var cdns = [
+    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+    'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
+    'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
+  ];
 
-    ctx.fillStyle = bgColor;
-    roundRect(ctx, BORDER, BORDER, W - BORDER*2, H - BORDER*2, 22);
-    ctx.fill();
-
-    // 상단 검정 바
-    ctx.fillStyle = '#111';
-    ctx.fillRect(BORDER, BORDER, W - BORDER*2, TOP_BAR);
-
-    const innerX = PAD, innerW = W - PAD*2 - 56;
-    let y = TOP_BAR + BORDER + 28;
-
-    // 소속
-    ctx.fillStyle = subColor;
-    ctx.font = 'bold 34px "Segoe UI", sans-serif';
-    ctx.fillText(getVal('inp-org', 'Sentinel / Guide'), innerX, y);
-    y += 40;
-
-    // 등급
-    ctx.fillStyle = mainColor;
-    ctx.font = '600 16px "Segoe UI", sans-serif';
-    ctx.fillText(getVal('inp-role', 'B Class'), innerX, y);
-    y += 20;
-
-    // 사진 박스
-    const photoW = W - PAD*2 - 56, photoH = 230 * SCALE;
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 3;
-    ctx.strokeRect(innerX, y, photoW, photoH);
-
-    if (charDataUrl) {
-      const img = new Image();
-      img.onload = () => {
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(innerX, y, photoW, photoH);
-        ctx.clip();
-        // cover fit
-        const ir = img.width / img.height, br = photoW / photoH;
-        let sw, sh, sx, sy;
-        if (ir > br) { sh = photoH; sw = sh * ir; sx = innerX - (sw - photoW)/2; sy = y; }
-        else { sw = photoW; sh = sw / ir; sx = innerX; sy = y - (sh - photoH)/2; }
-        ctx.drawImage(img, sx, sy, sw, sh);
-        ctx.restore();
-        drawAfterPhoto(ctx, y + photoH, innerX, innerW, W, H, SCALE, canvas, btn);
-      };
-      img.src = charDataUrl;
-    } else {
-      // 빈 박스 안내 텍스트
-      ctx.fillStyle = 'rgba(0,0,0,0.2)';
-      ctx.font = '500 18px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('캐릭터 이미지 업로드', innerX + photoW/2, y + photoH/2);
-      ctx.textAlign = 'left';
-      drawAfterPhoto(ctx, y + photoH, innerX, innerW, W, H, SCALE, canvas, btn);
+  function tryLoad(i){
+    if(i >= cdns.length){
+      setStatus('라이브러리 로드 실패. 인터넷 연결을 확인해주세요.');
+      document.getElementById('save-btn').disabled = true;
+      return;
     }
-  });
-
-  function drawAfterPhoto(ctx, afterY, innerX, innerW, W, H, SCALE, canvas, btn) {
-    let y = afterY + 20;
-
-    // 로고
-    if (logoDataUrl) {
-      const logo = new Image();
-      logo.onload = () => {
-        const lh = 48, lw = Math.min(logo.width * (lh/logo.height), 140);
-        ctx.drawImage(logo, innerX, y, lw, lh);
-        y += lh + 16;
-        drawNameAndSide(ctx, y, innerX, W, H, SCALE, canvas, btn);
-      };
-      logo.src = logoDataUrl;
-    } else {
-      drawNameAndSide(ctx, y, innerX, W, H, SCALE, canvas, btn);
-    }
+    loadScript(cdns[i], function(err){
+      if(err){ tryLoad(i+1); }
+      else { document.getElementById('save-btn').addEventListener('click', doSave); }
+    });
   }
-
-  function drawNameAndSide(ctx, y, innerX, W, H, SCALE, canvas, btn) {
-    // 이름
-    ctx.fillStyle = mainColor;
-    ctx.font = 'bold 30px "Segoe UI", sans-serif';
-    ctx.fillText(getVal('inp-name', '홍길동'), innerX, y);
-    y += 20;
-
-    // 영문이름
-    ctx.fillStyle = subColor;
-    ctx.font = '600 16px "Segoe UI", sans-serif';
-    ctx.fillText((getVal('inp-name-en', 'HONG GILDONG')).toUpperCase(), innerX, y);
-
-    // 사이드바
-    const sideText = document.getElementById('inp-side').value.trim();
-    const sideW = 56;
-    ctx.fillStyle = accentColor;
-    ctx.fillRect(W - sideW, 0, sideW, H);
-
-    if (sideText) {
-      ctx.save();
-      ctx.translate(W - sideW/2, H/2);
-      ctx.rotate(-Math.PI/2);
-      ctx.fillStyle = 'white';
-      ctx.font = 'bold 18px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(sideText, 0, 6);
-      ctx.restore();
-    }
-
-    // 저장
-    const a = document.createElement('a');
-    a.download = 'namecard.png';
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-    btn.disabled = false;
-    btn.textContent = '↓ PNG로 저장하기';
-  }
-
-  function getVal(id, fallback) {
-    const v = document.getElementById(id).value.trim();
-    return v || fallback;
-  }
-
-  function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x+r, y);
-    ctx.lineTo(x+w-r, y);
-    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-    ctx.lineTo(x+w, y+h-r);
-    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-    ctx.lineTo(x+r, y+h);
-    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-    ctx.lineTo(x, y+r);
-    ctx.quadraticCurveTo(x, y, x+r, y);
-    ctx.closePath();
-  }
+  tryLoad(0);
 </script>
 </body>
 </html>
