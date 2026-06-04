@@ -229,7 +229,7 @@
       <label>캐릭터 이미지</label>
       <div class="upload-row">
         <label class="upload-btn" for="char-file">↑ 선택</label>
-        <input type="file" id="char-file" accept="image/*" style="display:none">
+        <input type="file" id="char-file" accept="image/jpeg,image/png,image/gif,image/webp,image/*" style="display:none">
         <span class="upload-hint" id="char-hint">사각형 안에 표시됩니다</span>
       </div>
     </div>
@@ -237,7 +237,7 @@
       <label>로고 이미지 (선택)</label>
       <div class="upload-row">
         <label class="upload-btn" for="logo-file">↑ 선택</label>
-        <input type="file" id="logo-file" accept="image/*" style="display:none">
+        <input type="file" id="logo-file" accept="image/jpeg,image/png,image/gif,image/webp,image/*" style="display:none">
         <span class="upload-hint" id="logo-hint">없으면 공란으로 저장됩니다</span>
       </div>
     </div>
@@ -414,21 +414,45 @@
   });
 
   function handleUpload(inputId, imgId, hintId, placeholderId){
-    document.getElementById(inputId).addEventListener('change', function(e){
-      var file=e.target.files[0]; if(!file) return;
-      var r=new FileReader();
-      r.onload=function(ev){
+    var inputEl = document.getElementById(inputId);
+
+    // 안드로이드 대응: label 클릭 시 input 직접 트리거
+    var labelEl = document.querySelector('label[for="'+inputId+'"]');
+    if(labelEl){
+      labelEl.addEventListener('click', function(e){
+        e.preventDefault();
+        inputEl.value = ''; // 같은 파일 재선택 허용
+        inputEl.click();
+      });
+    }
+
+    inputEl.addEventListener('change', function(e){
+      var file = e.target.files && e.target.files[0];
+      if(!file) return;
+
+      // 이미지 파일만 허용
+      if(!file.type.match('image.*')) return;
+
+      var r = new FileReader();
+      r.onload = function(ev){
+        var dataUrl = ev.target.result;
         [imgId, imgId+'-mobile'].forEach(function(id){
-          var img=document.getElementById(id); if(!img) return;
-          img.src=ev.target.result; img.style.display='block';
+          var img = document.getElementById(id);
+          if(!img) return;
+          img.onload = function(){ img.style.display='block'; };
+          img.src = dataUrl;
+          img.style.display = 'block';
         });
         if(placeholderId){
           [placeholderId, placeholderId+'-mobile'].forEach(function(id){
-            var el=document.getElementById(id); if(el) el.style.display='none';
+            var el = document.getElementById(id);
+            if(el) el.style.display = 'none';
           });
         }
-        var name=file.name; document.getElementById(hintId).textContent=name.length>16?name.slice(0,14)+'…':name;
+        var name = file.name;
+        document.getElementById(hintId).textContent = name.length>16 ? name.slice(0,14)+'…' : name;
       };
+      r.onerror = function(){ alert('이미지를 불러오지 못했어요. 다시 시도해주세요.'); };
       r.readAsDataURL(file);
     });
   }
